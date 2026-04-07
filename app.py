@@ -104,18 +104,22 @@ def dashboard():
     return render_template("dashboard.html")
 
 # ==============================
-# START ATTENDANCE (Camera + Download)
+# START ATTENDANCE (DEPLOYMENT SAFE)
 # ==============================
 
 @app.route("/start")
 def start_attendance():
 
-    # Run attendance script (camera opens)
+    # Check if running on cloud (Render)
+    if os.environ.get("RENDER"):
+        return "⚠️ Camera feature works only on local system"
+
+    # Local system execution
     process = subprocess.Popen(
-        ["py", "-3.11", "attendance_30s.py"]
+        ["python", "attendance_30s.py"]
     )
 
-    process.wait()  # Wait until 30 sec capture finishes
+    process.wait()
 
     file_path = "attendance.csv"
 
@@ -138,6 +142,9 @@ def logout():
     return redirect("/")
 
 # ==============================
+# RUN APP (DEPLOYMENT READY)
+# ==============================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
