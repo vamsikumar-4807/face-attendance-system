@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===============================
+   LIGHT BACKGROUND (LOGIN PAGE)
+================================= */
+.light-bg {
+    background-color: #f5f6fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* ===============================
+   DARK BACKGROUND (REGISTER PAGE)
+================================= */
+.dark-bg {
+    background-color: #1f1b2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+}
+
+/* ===============================
+   CARD DESIGN
+================================= */
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    width: 380px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark card override */
+.dark-card {
+    background: #2b2443;
+    color: white;
+}
+
+/* ===============================
+   HEADINGS & TEXT
+================================= */
+h1 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 25px;
+}
+
+.dark-card .subtitle {
+    color: #ccc;
+}
+
+/* ===============================
+   INPUT FIELDS
+================================= */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #6c63ff;
+}
+
+/* Dark input fields */
+.dark-card input {
+    background: #3a315d;
+    border: none;
+    color: white;
+}
+
+.dark-card input::placeholder {
+    color: #bbb;
+}
+
+/* ===============================
+   ROW (REMEMBER + FORGOT)
+================================= */
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.row a {
+    text-decoration: none;
+    color: #6c63ff;
+}
+
+/* ===============================
+   TERMS CHECKBOX
+================================= */
+.terms {
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.dark-card a {
+    color: #a084ff;
+    text-decoration: none;
+}
+
+/* ===============================
+   BUTTON
+================================= */
+button {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(90deg, #6c63ff, #5a54e8);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* ===============================
+   BOTTOM TEXT
+================================= */
+.bottom-text {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+.bottom-text a {
+    color: #6c63ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* ===============================
+   DASHBOARD (Future Use)
+================================= */
+.dashboard {
+    text-align: center;
+    padding: 40px;
+}
+
+.capture-btn {
+    padding: 15px 25px;
+    font-size: 18px;
+    border-radius: 12px;
+}
