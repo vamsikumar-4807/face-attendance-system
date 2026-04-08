@@ -3,32 +3,108 @@
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="light-bg">
+<body>
 
-<div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2>Welcome</h2>
-        <div style="font-size:24px;">📧</div>
+<!-- Profile Dropdown Menu in Top Right -->
+<div class="profile-menu">
+    <div class="profile-icon" onclick="toggleDropdown()">
+        <img src="https://ui-avatars.com/api/?name={{ session['user'] }}&background=3b82f6&color=fff&rounded=true&size=50" alt="Profile" />
+    </div>
+    <div class="dropdown-content" id="myDropdown">
+        <div class="dropdown-email">
+            <i class="fa-solid fa-envelope" style="margin-right:8px; color:#60a5fa;"></i>
+            {{ session['user'] }}
+        </div>
+        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
+        <a href="/logout">
+            <i class="fa-solid fa-sign-out-alt" style="margin-right:8px; color:#ef4444;"></i>
+            Logout
+        </a>
+    </div>
+</div>
+
+<style>
+    .card.dashboard.expanded { width: 700px; max-width: 95%; transition: width 0.3s ease; }
+</style>
+<div class="card dashboard {{ 'expanded' if show_feed else '' }}">
+    <!-- Welcome Animation Section -->
+    <div id="welcome-section" class="welcome-container">
+        <h1 class="welcome-text">Welcome</h1>
+        <p class="subtitle" style="margin-top:-10px">{{ session['user'] }}</p>
+        <div class="loader-line"></div>
     </div>
 
-    <p style="margin-top:5px; color:gray;">
-        {{ session['user'] }}
-    </p>
+    <!-- Capture Buttons Section (Hidden initially) -->
+    <div id="capture-section" style="display:none;" class="fade-in-section">
+        <h2 style="margin-bottom:30px; font-weight:800; font-size:24px; text-transform:uppercase; letter-spacing:1px; color:#ffffff; text-shadow:0 2px 10px rgba(0,0,0,0.5);">Attendance Options</h2>
+        
+        <div class="capture-options">
+            <a href="/start_photo" style="text-decoration:none;">
+                <button class="capture-btn photo-btn">
+                    <i class="fa-solid fa-camera" style="margin-right:10px;"></i> Photo Capture
+                </button>
+            </a>
+            
+            <a href="/start_video" style="text-decoration:none; margin-top:20px; display:block;">
+                <button class="capture-btn video-btn">
+                    <i class="fa-solid fa-video" style="margin-right:10px;"></i> Video Capture
+                </button>
+            </a>
+        </div>
+    </div>
 
-    <hr style="margin:20px 0;">
-
-    <!-- DIRECT LINK INSTEAD OF FETCH -->
-    <a href="/start">
-        <button style="font-size:18px;">
-            ➕ Start Attendance Capture
+    <!-- Video Feed Section (Shown via Jinja Logic) -->
+    {% if show_feed %}
+    <div id="feed-section" style="text-align: center; margin-top:10px; display:block;" class="fade-in-section">
+        <h2 style="margin-bottom:15px; font-weight:700; font-size:20px; color:#ffffff;">Live Camera Feed</h2>
+        <img src="/video_feed" style="border-radius:15px; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-width: 100%; width: 640px;">
+        <br>
+        <button onclick="stopAndDownload()" class="capture-btn" style="background: linear-gradient(135deg, #ef4444, #dc2626); margin-top: 20px;">
+            <i class="fa-solid fa-stop" style="margin-right:10px;"></i> Stop Capture & Download
         </button>
-    </a>
-
-    <br><br>
-
-    <a href="/logout">Logout</a>
+    </div>
+    {% endif %}
 </div>
+
+<script>
+    function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.profile-icon') && !event.target.closest('.profile-icon')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    // Welcome animation logic
+    var isFeedActive = document.getElementById("feed-section") !== null;
+    
+    if (!isFeedActive) {
+        setTimeout(function() {
+            document.getElementById("welcome-section").style.display = "none";
+            document.getElementById("capture-section").style.display = "block";
+        }, 2000);
+    } else {
+        document.getElementById("welcome-section").style.display = "none";
+        document.getElementById("capture-section").style.display = "none";
+    }
+
+    function stopAndDownload() {
+        document.getElementById("feed-section").innerHTML = "<h2 style='color:white; margin-top:20px;'>Camera Stopped. Downloading Report...</h2><br><a href='/dashboard'><button class='capture-btn' style='margin-top:20px;'><i class='fa-solid fa-arrow-left' style='margin-right:10px;'></i> Back to Dashboard</button></a>";
+        window.location.href = "/stop_photo";
+    }
+</script>
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, send_file
+from flask import Flask, render_template, request, redirect, session, send_file, Response # type: ignore
 import subprocess
 import sqlite3
 import os
@@ -104,11 +104,11 @@ def dashboard():
     return render_template("dashboard.html")
 
 # ==============================
-# START ATTENDANCE (DEPLOYMENT SAFE)
+# START ATTENDANCE VIDEO (30s)
 # ==============================
 
-@app.route("/start")
-def start_attendance():
+@app.route("/start_video")
+def start_attendance_video():
 
     # Check if running on cloud (Render)
     if os.environ.get("RENDER"):
@@ -133,6 +133,34 @@ def start_attendance():
     return "Attendance file not found!"
 
 # ==============================
+# START ATTENDANCE PHOTO (Ends on Q)
+# ==============================
+
+import attendance # type: ignore
+
+@app.route("/video_feed")
+def video_feed():
+    # Streams the camera frames from attendance.py logic
+    return Response(attendance.gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route("/start_photo")
+def start_attendance_photo():
+    # Only available on local or allows camera
+    return render_template("dashboard.html", show_feed=True)
+
+@app.route("/stop_photo")
+def stop_attendance_photo():
+    # User pressed 'Stop & Download'
+    file_path = "attendance.csv"
+    if os.path.exists(file_path):
+        return send_file(
+            file_path,
+            as_attachment=True,
+            download_name="Attendance_Report.csv"
+        )
+    return "Attendance file not found!"
+
+# ==============================
 # LOGOUT
 # ==============================
 
@@ -147,4 +175,4 @@ def logout():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)

@@ -1,5 +1,5 @@
-import cv2
-import pandas as pd
+import cv2 # type: ignore
+import pandas as pd # type: ignore
 from datetime import datetime
 import time
 import pickle
@@ -41,8 +41,9 @@ face_cascade = cv2.CascadeClassifier(
 cv2.namedWindow("Attendance (30s)", cv2.WINDOW_NORMAL)
 cv2.setWindowProperty("Attendance (30s)", cv2.WND_PROP_TOPMOST, 1)
 
-marked = set()
-recognition_buffer = {}
+from typing import Set, Dict
+marked: Set[str] = set()
+recognition_buffer: Dict[str, int] = {}
 
 print("🎥 Attendance running for 30 seconds...")
 start_time = time.time()
@@ -75,8 +76,8 @@ while True:
         id_, conf = recognizer.predict(gray[y:y+h, x:x+w])
 
         # Safety check
-        if id_ in labels:
-            detected_name = labels[id_]
+        if id_ in labels: # type: ignore
+            detected_name = labels[id_] # type: ignore
         else:
             detected_name = "Unknown"
 
@@ -90,7 +91,7 @@ while True:
             recognition_buffer[name] = recognition_buffer.get(name, 0) + 1
 
             # Mark only after 5 stable detections
-            if recognition_buffer[name] >= 5 and name not in marked:
+            if recognition_buffer.get(name, 0) >= 5 and name not in marked: # type: ignore
 
                 time_now = datetime.now().strftime("%d-%m-%Y %I:%M %p")
 
@@ -138,7 +139,7 @@ print("📷 Camera closed.")
 
 print("➡ Calling mail system...")
 
-import mail_notify
+import mail_notify # type: ignore
 
 absentee_names = mail_notify.send_mails()
 
